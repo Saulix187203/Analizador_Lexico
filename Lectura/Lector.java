@@ -1,47 +1,40 @@
 import java.util.Scanner;
-import Tokens.IntPose;
-import Tokens.Letters;
 
 public class Lector {
     public static void main(String[] args) {
-        
         Scanner entrada = new Scanner(System.in);
         System.out.print("Ingrese los caracteres: ");
 
-        while (entrada.hasNext() ) {
-            String token = entrada.next();
-            /* while (entrada.hasNext()) {
-    String token = entrada.next();
+        while (entrada.hasNextLine()) {
+            String line = entrada.nextLine();
 
-    // Separa cada parte de números y letras dentro del token
-    // La regex ([0-9]+|[a-zA-Z]+) captura grupos de números o letras consecutivos
-    java.util.regex.Matcher matcher = java.util.regex.Pattern.compile("([0-9]+|[a-zA-Z]+)").matcher(token);
+            for (int i = 0; i < line.length(); i++) {
+                char caracter = line.charAt(i);
 
-    while (matcher.find()) {
-        String part = matcher.group();
-
-        if (part.matches("[a-zA-Z]+")) {
-            System.out.printf("LETTER(%s)%n", part);
-        } else if (part.matches("[0-9]+")) {
-            System.out.printf("NUMBER(%s)%n", part);
-        } else {
-            System.out.printf("ERROR(%s)%n", part);
-        }
-    }
-}
- */
-            
-
-            if (token.matches("[a-zA-Z]+")) {
-                System.out.printf("LETTER(%s)%n", token);
-            } 
-            else if (token.matches("[0-9]+")) {
-                System.out.printf("NUMBER(%s)%n", token);
-                //IntPose numero = new IntPose(token);
-            } else if (token.matches("[+\\-*/=]")) {
-                System.out.printf("ERROR(%s)%n", token);
+                if (Character.isDigit(caracter)) {
+                    int j = i;
+                    while (j < line.length() && Character.isDigit(line.charAt(j))) {
+                        j++;
+                    }
+                    String number = line.substring(i, j);
+                    System.out.printf("NUMBER(%s)%n", number);
+                    i = j - 1; // avanzar el índice al final del número
+                } else if (Character.isLetter(caracter)) {
+                    System.out.printf("LETTER(%c)%n", caracter);
+                } else if ("+-*/=".indexOf(caracter) >= 0) {
+                    System.out.printf("OPERATOR(%c)%n", caracter);
+                } else if (Character.isWhitespace(caracter)) {
+                    // no debería ocurrir porque usamos next()
+                } else {
+                    System.out.printf("ERROR(%c)%n", caracter);
+                }
             }
+
+
+            // Si quieres procesar sólo una línea y terminar, descomenta la siguiente línea:
+            // break;
         }
+
         entrada.close();
     }
 }
